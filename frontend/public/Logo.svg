@@ -1,0 +1,37 @@
+<svg
+  width="80"
+  height="80"
+  viewBox="0 0 80 80"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <!-- Outer wave -->
+  <circle
+    cx="40"
+    cy="40"
+    r="34"
+    fill="none"
+    stroke="#6366F1"
+    stroke-width="4"
+    opacity="0.25"
+  />
+
+  <!-- Middle wave -->
+  <circle
+    cx="40"
+    cy="40"
+    r="24"
+    fill="none"
+    stroke="#6366F1"
+    stroke-width="4"
+    opacity="0.5"
+  />
+
+  <!-- Core -->
+  <circle
+    cx="40"
+    cy="40"
+    r="12"
+    fill="#6366F1"
+  />
+</svg>
+
