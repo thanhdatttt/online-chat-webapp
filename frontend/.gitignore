@@ -10,6 +10,7 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+playground-1-echo.mongodb.js
 *.local
 
 # Editor directories and files
