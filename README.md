@@ -24,6 +24,7 @@ A modern **real-time online chat web application** built with a full-stack JavaS
 * **React**
 * **TypeScript**
 * **Tailwind CSS**
+* **Zod** (validation)
 * **Zustand** (state management)
 * **Axios** (HTTP client)
 * **Socket.IO Client** (real-time communication)
@@ -35,6 +36,7 @@ A modern **real-time online chat web application** built with a full-stack JavaS
 * **MongoDB** (database)
 * **Mongoose** (ODM)
 * **Socket.IO** (real-time server)
+* **Zod** (validation)
 * **JWT** (authentication & authorization)
 * **bcrypt** (password hashing)
 
@@ -68,11 +70,10 @@ online-chat-webapp/
 │   │   ├── controllers/     # Request handlers
 │   │   ├── models/          # Mongoose schemas
 │   │   ├── routes/          # API routes
-│   │   ├── services/        # Business logic
 │   │   ├── middlewares/     # Auth & error handling
 │   │   ├── sockets/         # Socket.IO logic
 │   │   ├── config/          # Environment & DB config
-│   │   └── server.ts
+│   │   └── server.js
 │   └── package.json
 │
 ├── .env.example

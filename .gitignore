@@ -9,7 +9,6 @@ lerna-debug.log*
 
 node_modules
 .env
-README.md
 playground-1-echo.mongodb.js
 dist
 dist-ssr
