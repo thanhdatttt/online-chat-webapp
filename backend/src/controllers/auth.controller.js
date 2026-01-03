@@ -1,11 +1,12 @@
 import { response } from "../utils/response.util.js";
 import { config } from "../configs/config.js";
-import User from "../models/User.js";
 import jwt from "jsonwebtoken";
+import User from "../models/User.js";
+import Session from "../models/Session.js";
 
 // TTL
 const ACCESS_TOKEN_TTL = "15m";
-const REFRESH_TOKEN_TTL = 7 * 24 * 60 & 60 * 1000;
+const REFRESH_TOKEN_TTL = 7 * 24 * 60 * 60 * 1000;
 
 // generate tokens
 const generateAccessToken = (userId) => {
@@ -19,7 +20,7 @@ const generateRefreshToken = (userId) => {
     });
 }
 
-
+// sign up
 export const signUp = async (req, res) => {
     try {
         const {username, password, email, firstName, lastName} = req.body;
@@ -60,6 +61,7 @@ export const signUp = async (req, res) => {
     }
 }
 
+// sign in
 export const signIn = async (req, res) => {
     try {
         const {usernameOrEmail, password} = req.body;
@@ -95,12 +97,69 @@ export const signIn = async (req, res) => {
         // generate tokens
         const accessToken = generateAccessToken(user._id);
         const refreshToken = generateRefreshToken(user._id);
-        user.refreshToken = refreshToken;
-        await user.save();
+        await Session.create({
+            userId: user._id,
+            refreshToken: refreshToken,
+            expiredAt: new Date(Date.now() + REFRESH_TOKEN_TTL),
+        });
+
+        // set refresh in cookies
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+            path: "/",
+            maxAge: REFRESH_TOKEN_TTL,
+        });
 
         return response.success(res, {user, accessToken, refreshToken}, "Signed in successfully", 200);
     } catch (err) {
         console.log("Error when sign in: ", err.message);
         return response.error(res, "System Error", err.message, 500);
+    }
+}
+
+// sign out
+export const signOut = async (req, res) => {
+    try {
+        // get token from cookie
+        const token = req.cookies?.refreshToken;
+
+        // clear cookie
+        await Session.deleteOne({refreshToken: token});
+        res.clearCookie("refreshToken");
+
+        return response.success(res, {}, "Signed out successfully", 204);
+    } catch (err) {
+        console.log("Error when sign out: ", err.message);
+        return response.error(res, "System Error", err.message, 500);
+    }
+}
+
+// other app authentication
+export const appCallback = async (req, res) => {
+    try {
+        const user = req.user;
+
+        const accessToken = generateAccessToken(user._id);
+        const refreshToken = generateRefreshToken(user._id);
+        await Session.create({
+            userId: user._id,
+            refreshToken: refreshToken,
+            expiredAt: new Date(Date.now() + REFRESH_TOKEN_TTL),
+        });
+
+        // set refresh in cookies
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+            path: "/",
+            maxAge: REFRESH_TOKEN_TTL,
+        });
+
+        return response.success(res, {user, accessToken, refreshToken}, "Login with third app successfully", 200);
+    } catch (err) {
+        return response.error(res, "Oauth error", err.message, 500);
     }
 }

@@ -65,10 +65,6 @@ const userSchema = new mongoose.Schema({
         enum: ["active", "banned"],
         default: "active",
     },
-    refreshToken: {
-        type: String,
-        default: null
-    },
 }, {timestamps: true});
 userSchema.index(
   {

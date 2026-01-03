@@ -1,10 +1,13 @@
 import { config } from "./configs/config.js";
 import { connectDB } from "./configs/db.js";
-import authRoute from "./routes/auth.route.js";
+import { authProtect } from "./middlewares/auth.middleware.js";
 import express from "express";
 import cors from "cors";
 import http from "http";
 import cookieParser from "cookie-parser";
+import passport from "./configs/passport.js";
+import authRoute from "./routes/auth.route.js";
+import userRoute from "./routes/user.route.js";
 
 // set up server
 const app = express();
@@ -15,9 +18,12 @@ app.use(cookieParser());
 
 // routes
 // public routes
+app.use(passport.initialize());
 app.use("/api/auth", authRoute);
 
 // private routes
+app.use(authProtect);
+app.use("/api/user", userRoute);
 
 // connect database
 connectDB().then( () => {
