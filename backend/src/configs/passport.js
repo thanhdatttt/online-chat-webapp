@@ -1,5 +1,6 @@
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { Strategy as FacebookStrategy } from "passport-facebook";
+import { Strategy as GitHubStrategy } from "passport-github2";
 import { config } from "./config.js";
 import passport from "passport";
 import User from "../models/User.js";
@@ -128,5 +129,71 @@ passport.use(new FacebookStrategy(
         }
     }
 ))
+
+// github strategy
+passport.use(new GitHubStrategy(
+    {
+        clientID: config.GIT_CLIENT_ID,
+        clientSecret: config.GIT_CLIENT_SECRET,
+        callbackURL: config.GIT_CLIENT_CALLBACK,
+        scope: ["user:email"],
+    },
+    async (accessToken, refreshToken, profile, cb) => {
+        try {
+            const githubId = profile.id;
+            const displayName = profile.displayName || profile.username;
+            const avatarUrl = profile.photos?.[0]?.value || null;
+
+            // 🔴 GitHub KHÔNG đảm bảo email
+            let email =
+            profile.emails?.find(e => e.primary && e.verified)?.value ||
+            profile.emails?.[0]?.value;
+            if (!email) {
+                email = `${githubId}@github.local`;
+            }
+
+            // check user
+            let user = await User.findOne({
+                authProviders: {
+                    $elemMatch: {
+                        provider: "github",
+                        providerUserId: githubId,
+                    },
+                },
+            });
+            if (user) return cb(null, user);
+
+            // check user email
+            user = await User.findOne({ email });
+            if (user) {
+                user.authProviders.push({
+                    provider: "github",
+                    providerUserId: githubId,
+                });
+                await user.save();
+                return cb(null, user);
+            }
+
+            const baseUsername = email.split("@")[0];
+            const username = `${baseUsername}_${githubId.slice(0, 6)}`;
+            user = await User.create({
+                username,
+                email,
+                displayName,
+                avatarUrl,
+                authProviders: [
+                    {
+                    provider: "github",
+                    providerUserId: githubId,
+                    },
+                ],
+            });
+
+            return cb(null, user);
+        } catch (err) {
+            return cb(err, null);
+        }
+    }
+));
 
 export default passport;

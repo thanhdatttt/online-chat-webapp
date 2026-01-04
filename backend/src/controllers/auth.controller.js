@@ -158,7 +158,10 @@ export const appCallback = async (req, res) => {
             maxAge: REFRESH_TOKEN_TTL,
         });
 
-        return response.success(res, {user, accessToken, refreshToken}, "Login with third app successfully", 200);
+        return res.redirect(
+            `${config.CLIENT_URL}/oauth-success?accessToken=${accessToken}`
+        );
+        // return response.success(res, {user, accessToken, refreshToken}, "Login with third app successfully", 200);
     } catch (err) {
         return response.error(res, "Oauth error", err.message, 500);
     }

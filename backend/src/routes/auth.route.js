@@ -18,15 +18,24 @@ router.get("/google", passport.authenticate("google", {
 router.get("/google/callback",passport.authenticate("google", {
     session: false,
     failureRedirect: "/login",
-  }), appCallback);
+}), appCallback);
 
 // facebook authentication
 router.get("/facebook", passport.authenticate("facebook", {
-  scope: ["email"],
+    scope: ["email"],
 }));
 router.get("/facebook/callback", passport.authenticate("facebook", {
-  session: false,
-  failureRedirect: "/login",
+    session: false,
+    failureRedirect: "/login",
+}), appCallback);
+
+// github authentication
+router.get("/github", passport.authenticate("github", {
+    scope: ["user:email"],
+}));
+router.get("/github/callback",passport.authenticate("github", {
+    session: false,
+    failureRedirect: "/login",
 }), appCallback);
 
 export default router;
