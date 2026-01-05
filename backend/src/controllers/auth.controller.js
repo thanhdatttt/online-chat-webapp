@@ -5,7 +5,7 @@ import User from "../models/User.js";
 import Session from "../models/Session.js";
 
 // TTL
-const ACCESS_TOKEN_TTL = "15m";
+const ACCESS_TOKEN_TTL = "15s";
 const REFRESH_TOKEN_TTL = 7 * 24 * 60 * 60 * 1000;
 
 // generate tokens
@@ -136,6 +136,34 @@ export const signOut = async (req, res) => {
     }
 }
 
+// refresh token
+export const refreshToken = async (req, res) => {
+    try {
+        const token = req.cookies?.refreshToken;
+        if (!token) {
+            return response.error(res, "Unauthorized", "No token provided", 401);
+        }
+
+        // check token in session
+        const session = await Session.findOne({refreshToken: token});
+        if (!session) {
+            return response.error(res, "Forbidden", "Expired or invalid token", 403);
+        }
+
+        // check expiration
+        if (session.expiredAt < new Date()) {
+            return response.error(res, "Forbidden", "Expired token", 403);
+        }
+
+        // create new access token
+        const accessToken = generateAccessToken(session.userId);
+        return response.success(res, {accessToken}, "Refresh successfully", 200);
+    } catch (err) {
+        console.log("Error when refresh: ", err.message);
+        return response.error(res, "System error", err.message, 500);
+    }
+}
+
 // other app authentication
 export const appCallback = async (req, res) => {
     try {
@@ -159,10 +187,11 @@ export const appCallback = async (req, res) => {
         });
 
         return res.redirect(
-            `${config.CLIENT_URL}/oauth-success?accessToken=${accessToken}`
+            `${config.CLIENT_URL}/oauth/success?accessToken=${encodeURIComponent(accessToken)}`
         );
         // return response.success(res, {user, accessToken, refreshToken}, "Login with third app successfully", 200);
     } catch (err) {
+        console.log("Error when oauth: ", err.message);
         return response.error(res, "Oauth error", err.message, 500);
     }
 }

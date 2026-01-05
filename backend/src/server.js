@@ -23,7 +23,7 @@ app.use("/api/auth", authRoute);
 
 // private routes
 app.use(authProtect);
-app.use("/api/user", userRoute);
+app.use("/api/users", userRoute);
 
 // connect database
 connectDB().then( () => {

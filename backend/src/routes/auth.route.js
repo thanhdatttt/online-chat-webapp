@@ -1,4 +1,5 @@
-import { appCallback, signIn, signOut, signUp } from "../controllers/auth.controller.js";
+import { config } from "../configs/config.js";
+import { appCallback, refreshToken, signIn, signOut, signUp } from "../controllers/auth.controller.js";
 import { validate } from "../middlewares/validate.middleware.js";
 import { userSignInSchema, userSignUpSchema } from "../validations/user.validate.js";
 import express from "express";
@@ -10,6 +11,7 @@ const router = express.Router();
 router.post("/signup", validate(userSignUpSchema), signUp);
 router.post("/signin", validate(userSignInSchema), signIn);
 router.post("/signout", signOut);
+router.post("/refresh", refreshToken);
 
 // google authentication
 router.get("/google", passport.authenticate("google", {
@@ -17,7 +19,7 @@ router.get("/google", passport.authenticate("google", {
 }));
 router.get("/google/callback",passport.authenticate("google", {
     session: false,
-    failureRedirect: "/login",
+    failureRedirect: `${config.CLIENT_URL}/login`,
 }), appCallback);
 
 // facebook authentication
@@ -26,7 +28,7 @@ router.get("/facebook", passport.authenticate("facebook", {
 }));
 router.get("/facebook/callback", passport.authenticate("facebook", {
     session: false,
-    failureRedirect: "/login",
+    failureRedirect: `${config.CLIENT_URL}/login`,
 }), appCallback);
 
 // github authentication
@@ -35,7 +37,7 @@ router.get("/github", passport.authenticate("github", {
 }));
 router.get("/github/callback",passport.authenticate("github", {
     session: false,
-    failureRedirect: "/login",
+    failureRedirect: `${config.CLIENT_URL}/login`,
 }), appCallback);
 
 export default router;
