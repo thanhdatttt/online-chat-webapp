@@ -11,6 +11,7 @@ import { useAuthStore } from "@/stores/auth.store.ts";
 import { useNavigate } from "react-router-dom";
 import Error from "../utils/Error.tsx";
 import z from "zod";
+import axios from "axios";
 
 // validate schema
 const signUpSchema = z.object({
@@ -47,7 +48,7 @@ export function SignupForm({
   const {signUp} = useAuthStore();
   
   // form validation action
-  const {register, handleSubmit, formState:{errors, isSubmitting}} = useForm<SignUpFormValues>({
+  const {register, handleSubmit, setError, formState:{errors, isSubmitting}} = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
   });
 
@@ -59,6 +60,23 @@ export function SignupForm({
 
       navigate("/login");
     } catch (err) {
+      // handle server error
+      if (axios.isAxiosError(err)) {
+        const error = err.response?.data;
+
+        if (error?.field) {
+          setError(error.field, {
+            type: "server",
+            message: error.detail,
+          });
+        }
+        else if (typeof error?.detail === "string") {
+          setError("root", {
+            type: "server",
+            message: error.detail,
+          });
+        }
+      }
       console.log(err);
     }
   }
@@ -145,6 +163,10 @@ export function SignupForm({
                   )}
                 </div>
               </div>
+              {/* server error */}
+              {errors.root && (
+                <Error message={errors.root.message}/>
+              )}
 
               {/* form button */}
               <Button type="submit" className="text-lg w-full cursor-pointer hover:bg-accent hover:text-black disabled:text-white disabled:bg-accent" disabled={isSubmitting}>

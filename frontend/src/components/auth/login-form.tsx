@@ -10,6 +10,7 @@ import { useAuthStore } from "@/stores/auth.store.ts";
 import { useNavigate } from "react-router-dom";
 import Error from "../utils/Error.tsx";
 import z from "zod";
+import axios from "axios";
 
 const signinSchema = z.object({
   usernameOrEmail: z.string().min(1, "Username or email is required"),
@@ -29,7 +30,7 @@ export function LoginForm({
   const {signIn, loginWithGoogle, loginWithFacebook, loginWithGithub} = useAuthStore();
 
   // form validation action
-  const {register, handleSubmit, formState:{errors, isSubmitting}} = useForm<SignInFormValues>({
+  const {register, handleSubmit, setError, formState:{errors, isSubmitting}} = useForm<SignInFormValues>({
     resolver: zodResolver(signinSchema),
   });
 
@@ -41,6 +42,18 @@ export function LoginForm({
 
       navigate("/home");
     } catch (err) {
+      // handle error from server
+      if (axios.isAxiosError(err)) {
+        const error = err.response?.data;
+
+        if (typeof error?.detail === "string") {
+          setError("root", {
+            type: "server",
+            message: error.detail,
+          });
+        }
+      }
+
       console.log(err);
     }
   }
@@ -66,6 +79,10 @@ export function LoginForm({
                   {/* input error */}
                   {errors.usernameOrEmail && (
                     <Error message={errors.usernameOrEmail.message}/>
+                  )}
+                  {/* server error */}
+                  {errors.root && (
+                    <Error message={errors.root.message}/>
                   )}
                 </div>
               </div>

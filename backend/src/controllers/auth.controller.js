@@ -31,13 +31,13 @@ export const signUp = async (req, res) => {
         // check username
         const checkUsername = await User.findOne({username});
         if (checkUsername) {
-            return response.error(res, "Bad request", "Username is already used", 400);
+            return response.error(res, "Bad request", "Username is already used", 400, "username");
         }
 
         // check email
         const checkEmail = await User.findOne({email});
         if (checkEmail) {
-            return response.error(res, "Bad request", "Email is already used", 400);
+            return response.error(res, "Bad request", "Email is already used", 400, "email");
         }
 
         // create new user
@@ -91,7 +91,7 @@ export const signIn = async (req, res) => {
         // check password
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
-            return response.error(res, "Bad request", "Password is not matched", 400);
+            return response.error(res, "Bad request", "Username or password is incorrect", 400);
         }
 
         // generate tokens

@@ -6,9 +6,10 @@ export const response = {
         });
     },
 
-    error: (res, message = "Error", detail=null,  statusCode = 500) => {
+    error: (res, message = "Error", detail=null, statusCode = 500, field=null) => {
         return res.status(statusCode).json({
             message,
+            field,
             detail,
         });
     },
