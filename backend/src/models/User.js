@@ -29,12 +29,10 @@ const userSchema = new mongoose.Schema({
         maxlength: 150,
         index: true,
     },
-
     authProviders: {
         type: [authProviderSchema],
         required: true,
     },
-
     email: {
         type: String,
         unique: true,
@@ -66,6 +64,8 @@ const userSchema = new mongoose.Schema({
         default: "active",
     },
 }, {timestamps: true});
+
+// create index search sort by authprovider and must be unique
 userSchema.index(
   {
     "authProviders.provider": 1,

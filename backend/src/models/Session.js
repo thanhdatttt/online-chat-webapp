@@ -18,5 +18,7 @@ const sessionSchema = new mongoose.Schema({
     }
 }, {timestamps: true});
 
+// create index search sorted by expire time to remove expired objects
 sessionSchema.index({expiredAt: 1}, {expireAfterSeconds: 0});
+
 export default mongoose.model("Session", sessionSchema);
