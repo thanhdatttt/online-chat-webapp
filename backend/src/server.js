@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser";
 import passport from "./configs/passport.js";
 import authRoute from "./routes/auth.route.js";
 import userRoute from "./routes/user.route.js";
+import friendRoute from "./routes/friend.route.js";
 
 // set up server
 const app = express();
@@ -24,6 +25,7 @@ app.use("/api/auth", authRoute);
 // private routes
 app.use(authProtect);
 app.use("/api/users", userRoute);
+app.use("/api/friends", friendRoute);
 
 // connect database
 connectDB().then( () => {

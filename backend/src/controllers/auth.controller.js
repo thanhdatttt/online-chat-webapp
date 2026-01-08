@@ -5,7 +5,7 @@ import User from "../models/User.js";
 import Session from "../models/Session.js";
 
 // TTL
-const ACCESS_TOKEN_TTL = "15s";
+const ACCESS_TOKEN_TTL = "30m";
 const REFRESH_TOKEN_TTL = 7 * 24 * 60 * 60 * 1000;
 
 // generate tokens
