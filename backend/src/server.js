@@ -9,6 +9,8 @@ import passport from "./configs/passport.js";
 import authRoute from "./routes/auth.route.js";
 import userRoute from "./routes/user.route.js";
 import friendRoute from "./routes/friend.route.js";
+import messageRoute from "./routes/message.route.js";
+import chatRoute from "./routes/chat.route.js";
 
 // set up server
 const app = express();
@@ -26,6 +28,8 @@ app.use("/api/auth", authRoute);
 app.use(authProtect);
 app.use("/api/users", userRoute);
 app.use("/api/friends", friendRoute);
+app.use("/api/messages", messageRoute);
+app.use("/api/chats", chatRoute);
 
 // connect database
 connectDB().then( () => {

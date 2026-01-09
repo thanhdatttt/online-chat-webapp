@@ -27,7 +27,7 @@ const messageSchema = new mongoose.Schema({
     },
     type: {
         type: String,
-        enum: ["text", "image", "file", "video", "audio", "system"],
+        enum: ["text", "image", "file", "video", "audio"],
         default: "text",
     },
     content: {
@@ -35,12 +35,16 @@ const messageSchema = new mongoose.Schema({
         trim: true,
         maxLength: 5000,
     },
-    attachments: [
-        {
-            url: String,
-            fileName: String,
-        },
-    ],
+    attachments: {
+        type: [
+            {
+                url: String,
+                fileName: String,
+                size: Number,
+            },
+        ],
+        default: [],
+    },
     seenBy: [
         {
             type: mongoose.Schema.Types.ObjectId,
@@ -54,7 +58,7 @@ const messageSchema = new mongoose.Schema({
     },
     reactions: {
         type: [reactionSchema],
-        default: null,
+        default: [],
     },
     isDeleted: {
       type: Boolean,
@@ -65,7 +69,5 @@ const messageSchema = new mongoose.Schema({
 
 // create index search with have sorted by chatId and create time
 messageSchema.index({chatId: 1, createdAt: -1});
-// create inde search sorted by senderId
-messageSchema.index({ senderId: 1 });
 
 export default mongoose.model("Message", messageSchema);

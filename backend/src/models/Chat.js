@@ -54,6 +54,12 @@ const chatSchema = new mongoose.Schema({
     lastMessage: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Message",
+        default: null,
+    },
+    lastMessageAt: {
+        type: Date,
+        index: true,
+        default: null,
     },
     unReadCounts: {
         type: Map,
@@ -71,5 +77,6 @@ const chatSchema = new mongoose.Schema({
 chatSchema.index({
     "members.userId": 1,
 });
+chatSchema.index({"lastMessage.createdAt": -1});
 
 export default mongoose.model("Chat", chatSchema);

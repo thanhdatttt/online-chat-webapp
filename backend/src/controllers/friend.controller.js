@@ -138,11 +138,21 @@ export const cancelFriendRequest = async (req, res) => {
     }
 }
 
-
 // get all friend requests
 export const getFriendRequests = async (req, res) => {
     try {
-        
+        const userId = req.user._id;
+
+        // separate sent and received requests
+        const [sent, received] = await Promise.all([
+            FriendRequest.find({
+                from: userId,
+            }).populate("to", "_id username displayName avatarUrl"),
+            FriendRequest.find({
+                to: userId,
+            }).populate("from", "_id username displayName avatarUrl")
+        ]);
+        return response.success(res, {sent, received}, "Get friend requests successfully", 200);
     } catch (err) {
         console.log("Error when get friend requests: ", err.message);
         return response.error(res, "System error", err.message, 500);
@@ -152,7 +162,27 @@ export const getFriendRequests = async (req, res) => {
 // get all friends
 export const getFriends = async (req, res) => {
     try {
-        
+        const userId = req.user._id;
+
+        // get friendship
+        const friendShip = await Friend.find({
+            $or: [
+                {userA: userId,},
+                {userB: userId,},
+            ],
+        })
+        .populate("userA", "_id username displayName avatarUrl")
+        .populate("userB", "_id username displayName avatarUrl")
+        .lean();
+        if (!friendShip.length) {
+            return response.success(res, {friends: []}, "Get friends successfully", 200);
+        }
+
+        // get list of friends
+        const friends = friendShip.map((f) => f.userA?._id.toString() === userId.toString()
+            ? f.userB : f.userA
+        );
+        return response.success(res, {friends}, "Get friends successfully", 200);
     } catch (err) {
         console.log("Error when get friends: ", err.message);
         return response.error(res, "System error", err.message, 500);
