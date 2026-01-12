@@ -1,5 +1,7 @@
 import {BrowserRouter, Route, Routes, Navigate} from "react-router-dom";
 import {Toaster} from "sonner";
+import { useEffect } from "react";
+import { useThemeStore } from "./stores/theme.store.ts";
 import SignInPage from "./pages/SignInPage.tsx";
 import SignUpPage from "./pages/SignUpPage.tsx";
 import ChatPage from "./pages/ChatPage.tsx";
@@ -7,6 +9,12 @@ import ProtectRoute from "./components/auth/ProtectRoute.tsx";
 import OauthSuccess from "./components/auth/OauthSuccess.tsx";
 
 function App() {
+  // set theme with stored value
+  const {isDark, setTheme} = useThemeStore();
+  useEffect(() => {
+    setTheme(isDark);
+  }, [isDark]);
+
   return (
     <>
       {/* toaster */}

@@ -1,4 +1,4 @@
-import mongoose, { model } from "mongoose";
+import mongoose from "mongoose";
 
 // participant schema
 const memberSchema = new mongoose.Schema({

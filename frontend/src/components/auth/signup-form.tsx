@@ -2,14 +2,14 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "../ui/label";
+import { Label } from "@/components/ui/label";
 import { FaGoogle, FaFacebookF, FaGithub } from "react-icons/fa6";
 import { regex } from "@/lib/regex";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuthStore } from "@/stores/auth.store.ts";
 import { useNavigate } from "react-router-dom";
-import Error from "../utils/Error.tsx";
+import Error from "@/components/utils/Error.tsx";
 import z from "zod";
 import axios from "axios";
 
@@ -45,7 +45,7 @@ export function SignupForm({
   // navigate function
   const navigate = useNavigate();
   // get store functions
-  const {signUp} = useAuthStore();
+  const {signUp, loginWithGoogle, loginWithFacebook, loginWithGithub} = useAuthStore();
   
   // form validation action
   const {register, handleSubmit, setError, formState:{errors, isSubmitting}} = useForm<SignUpFormValues>({
@@ -179,9 +179,9 @@ export function SignupForm({
               <p>Or continue with</p>
             </div>
             <div className="grid grid-cols-3 gap-4">
-              <Button className="hover:bg-red-400 hover:text-amber-50 cursor-pointer" variant="outline" type="button"> <FaGoogle/> </Button>
-              <Button className="hover:bg-blue-400 hover:text-amber-50 cursor-pointer" variant="outline" type="button"> <FaFacebookF/> </Button>
-              <Button className="hover:bg-gray-400 hover:text-amber-50 cursor-pointer" variant="outline" type="button"> <FaGithub/> </Button>
+              <Button onClick={loginWithGoogle} className="hover:bg-red-400 hover:text-amber-50 dark:hover:bg-red-400 cursor-pointer" variant="outline" type="button"> <FaGoogle/> </Button>
+              <Button onClick={loginWithFacebook} className="hover:bg-blue-400 hover:text-amber-50 dark:hover:bg-blue-400 cursor-pointer" variant="outline" type="button"> <FaFacebookF/> </Button>
+              <Button onClick={loginWithGithub} className="hover:bg-gray-400 hover:text-amber-50 dark:hover:bg-gray-400 cursor-pointer" variant="outline" type="button"> <FaGithub/> </Button>
             </div>
 
             {/* sign in */}
@@ -195,14 +195,14 @@ export function SignupForm({
             <img
               src="/LoginImg.png"
               alt="Authentication Image"
-              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.9]"
             />
           </div>
         </CardContent>
       </Card>
 
       {/* term of service and privacy policy */}
-      <div className="px-6 text-center text-balance">
+      <div className="px-6 text-white text-lg text-center text-balance font-bold">
         You should agree to our <a href="#" className="text-primary font-bold cursor-pointer hover:underline">Terms of Service</a>{" "} and <a href="#" className="text-primary font-bold cursor-pointer hover:underline">Privacy Policy</a>.
       </div>
     </div>

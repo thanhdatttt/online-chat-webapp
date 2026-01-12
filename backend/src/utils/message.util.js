@@ -1,4 +1,5 @@
-export const updateChat = (chat, message, senderId) => {
+// update chat when have a new message
+export const updateChatAfterCreateMessage = (chat, message, senderId) => {
     chat.set({
         lastMessage: message._id,
         lastMessageAt: message.createdAt,

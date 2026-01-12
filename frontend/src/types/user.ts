@@ -21,7 +21,7 @@ export interface User {
 
   authProviders: AuthProvider[];
 
-  avatarUrl?: string | null;
+  avatarUrl?: string;
   bio?: string | null;
   phone?: string;
 

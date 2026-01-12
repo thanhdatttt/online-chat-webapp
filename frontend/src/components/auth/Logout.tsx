@@ -1,6 +1,8 @@
 import { useAuthStore } from "@/stores/auth.store";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { LogOut } from "lucide-react";
 
 const Logout = () => {
   // navigate function
@@ -17,8 +19,13 @@ const Logout = () => {
     }
   }
 
-  return (
-    <Button onClick={handleLogout}>Logout</Button>
+  return (   
+    <DropdownMenuItem className="cursor-pointer" variant="destructive" onClick={handleLogout}>
+      <Button variant="completeGhost" className="cursor-pointer">
+        <LogOut className="text-destructive"/>
+        Logout
+      </Button>
+    </DropdownMenuItem>
   );
 }
 

@@ -1,4 +1,5 @@
 import type { User } from "./user.ts";
+import type { Chat, Message } from "./chat.ts";
 
 // define type for auth store
 export interface AuthState {
@@ -19,4 +20,28 @@ export interface AuthState {
   loginWithFacebook: () => Promise<void>;
   loginWithGithub: () => Promise<void>;
   handleOauthSuccess: (accessToken: string) => Promise<void>;
+}
+
+// define type for theme store
+export interface ThemeState {
+  isDark: boolean,
+
+  toggleTheme: () => void;
+  setTheme: (dark: boolean) => void;
+}
+
+// define type for chat store
+export interface ChatState {
+  chats: Chat[];
+  messages: Record<string, {
+    items: Message[],
+    hasMore: boolean,
+    nextCursor?: string | null;
+  }>;
+  activeChatId: string | null;
+  loading: boolean;
+  
+  reset: () => void;
+  setActiveChat: (chatId: string | null) => void;
+  fetchChats: () => Promise<void>;
 }

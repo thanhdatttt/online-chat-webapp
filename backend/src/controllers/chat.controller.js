@@ -74,7 +74,7 @@ export const getChats = async (req, res) => {
         })
         .populate({
             path: "lastMessage",
-            select: "senderId",
+            select: "senderId content attachments createdAt",
             populate: {
                 path: "senderId",
                 select: "displayName avatarUrl",
@@ -109,32 +109,42 @@ export const getMessages = async (req, res) => {
     try {
         const {chatId} = req.params;
         // get pagination info
-        const {limit=50, offset} = req.query;
+        const {limit=50, cursor} = req.query;
         const query = {
             chatId,
-            isDeleted: false,
         }
-        if (offset) {
-            query.createdAt = {$lt: new Date(offset)};
+        if (cursor) {
+            query.createdAt = {$lt: new Date(cursor)};
         }
 
         // get messages
         let messages = await Message.find(query)
         .sort({ createdAt: -1 })
         .limit(Number(limit) + 1)
-        .populate("senderId", "_id displayName avatarUrl")
-        .populate("replyTo");
+        .populate({
+            path: "replyTo", 
+            select: "senderId content attachments createdAt",
+            populate: {
+                path: "senderId",
+                select: "displayName avatarUrl",
+            }
+        })
+        .populate({
+            path: "seenBy",
+            select: "displayName avatarUrl",
+            options: { limit: 5 } // only get top 5 seen user
+        });
 
         // get next offset
-        let nextOffset = null;
+        let nextCursor = null;
         if (messages.length > Number(limit)) {
             const nextMessage = messages[messages.length - 1];
-            nextOffset = nextMessage.createdAt.toISOString();
+            nextCursor = nextMessage.createdAt.toISOString();
             messages.pop();
         }
 
         messages = messages.reverse();
-        return response.success(res, {messages, nextOffset}, "Get messages successfully", 200);
+        return response.success(res, {messages, nextCursor}, "Get messages successfully", 200);
     } catch (err) {
         console.log("Error when getting messages: ", err.message);
         return response.error(res, "System error", err.message, 500);

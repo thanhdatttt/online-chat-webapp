@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Label } from "../ui/label";
+import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { FaGoogle, FaFacebookF, FaGithub } from "react-icons/fa6";
@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAuthStore } from "@/stores/auth.store.ts";
 import { useNavigate } from "react-router-dom";
-import Error from "../utils/Error.tsx";
+import Error from "@/components/utils/Error.tsx";
 import z from "zod";
 import axios from "axios";
 
@@ -112,9 +112,9 @@ export function LoginForm({
               <p>Or continue with</p>
             </div>
             <div className="grid grid-cols-3 gap-4">
-              <Button onClick={loginWithGoogle} className="hover:bg-red-400 hover:text-amber-50 cursor-pointer" variant="outline" type="button"> <FaGoogle/> </Button>
-              <Button onClick={loginWithFacebook} className="hover:bg-blue-400 hover:text-amber-50 cursor-pointer" variant="outline" type="button"> <FaFacebookF/> </Button>
-              <Button onClick={loginWithGithub} className="hover:bg-gray-400 hover:text-amber-50 cursor-pointer" variant="outline" type="button"> <FaGithub/> </Button>
+              <Button onClick={loginWithGoogle} className="hover:bg-red-400 hover:text-amber-50 dark:hover:bg-red-400 cursor-pointer" variant="outline" type="button"> <FaGoogle/> </Button>
+              <Button onClick={loginWithFacebook} className="hover:bg-blue-400 hover:text-amber-50 dark:hover:bg-blue-400 cursor-pointer" variant="outline" type="button"> <FaFacebookF/> </Button>
+              <Button onClick={loginWithGithub} className="hover:bg-gray-400 hover:text-amber-50 dark:hover:bg-gray-400 cursor-pointer" variant="outline" type="button"> <FaGithub/> </Button>
             </div>
 
             {/* sign in */}
@@ -128,14 +128,14 @@ export function LoginForm({
             <img
               src="/LoginImg.png"
               alt="Authentication Image"
-              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.9]"
             />
           </div>
         </CardContent>
       </Card>
 
       {/* term of service and privacy policy */}
-      <div className="px-6 text-center text-balance *:[a]:text-primary *:[a]:font-bold *:[a]:cursor-pointer *:[a]:hover:underline">
+      <div className="px-6 text-white text-lg text-center text-balance font-bold *:[a]:text-primary *:[a]:font-bold *:[a]:cursor-pointer *:[a]:hover:underline">
         You should agree to our <a href="#">Terms of Service</a>{" "} and <a href="#">Privacy Policy</a>.
       </div>
     </div>

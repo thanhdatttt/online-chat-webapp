@@ -1,5 +1,5 @@
 import { response } from "../utils/response.util.js";
-import { updateChat } from "../utils/message.util.js";
+import { updateChatAfterCreateMessage } from "../utils/message.util.js";
 import Message from "../models/Message.js";
 import Chat from "../models/Chat.js";
 
@@ -35,7 +35,7 @@ export const sendDirectMessage = async (req, res) => {
             seenBy: [senderId],
         });
         // update chat
-        updateChat(chat, message, senderId);
+        updateChatAfterCreateMessage(chat, message, senderId);
         await chat.save();
         return response.success(res, {message}, "Send direct message successfully", 201);
     } catch (err) {
@@ -62,11 +62,29 @@ export const sendGroupMessage = async (req, res) => {
             seenBy: [senderId],
         });
         // update chat
-        updateChat(chat, message, senderId);
+        updateChatAfterCreateMessage(chat, message, senderId);
         await chat.save();
         return response.success(res, {message}, "Send group message successfully", 201);
     } catch (err) {
         console.log("Error when send group message: ", err.message);
+        return response.error(res, "System error", err.message, 500);
+    }
+}
+
+// mark seen messages
+export const markSeen = async (req, res) => {
+    try {
+        const {chatId} = req.params;
+        const userId = req.user._id;
+
+        // mark seen
+        await Message.updateMany({
+            chatId,
+            seenBy: {$ne: userId},
+        }, {$push: {seenBy: userId}});
+
+    } catch (err) {
+        console.log("Error when send mark seen: ", err.message);
         return response.error(res, "System error", err.message, 500);
     }
 }
