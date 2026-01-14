@@ -70,6 +70,7 @@ export interface Message {
   replyTo?: LastOrReplyMessage | null;
   reactions: Reaction[];
   isDeleted: boolean;
+  isOwn?: boolean;
   deletedAt?: string | null;
   updatedAt?: string | null;
   createdAt: string;

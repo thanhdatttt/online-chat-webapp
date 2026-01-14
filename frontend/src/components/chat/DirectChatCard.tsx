@@ -11,7 +11,7 @@ const DirectChatCard = ({chat} : {chat: Chat}) => {
   // get user info
   const {user} = useAuthStore();
   // get active chat
-  const {activeChatId, setActiveChat, messages} = useChatStore();
+  const {activeChatId, messages, setActiveChat, fetchMessages} = useChatStore();
   if (!user) {
     return null;
   }
@@ -32,6 +32,7 @@ const DirectChatCard = ({chat} : {chat: Chat}) => {
       setActiveChat(id);
       if (!messages[id]) {
         // fetch messages
+        await fetchMessages(id);
       }
     } catch (err) {
       console.log(err);

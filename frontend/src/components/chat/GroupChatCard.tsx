@@ -5,6 +5,7 @@ import { useChatStore } from "@/stores/chat.store";
 import ChatCard from "@/components/chat/ChatCard";
 import UnReadBadge from "./UnReadBadge";
 import GroupChatAvatar from "./GroupChatAvatar";
+import UserAvatar from "./UserAvatar";
 
 const GroupChatCard = ({chat} : {chat : Chat}) => {
   // get user info
@@ -18,6 +19,7 @@ const GroupChatCard = ({chat} : {chat : Chat}) => {
   // get chart info
   const unReadCounts = chat.unReadCounts[user._id];
   const name = chat.group?.name ?? "";
+  const avatarUrl = chat.group?.avatarUrl ?? null;
   const lastMessage = chat.lastMessage?.content?.trim() || (chat.lastMessage?.attachments?.length ? "📎 Attachment" : "");
   
   // handle function
@@ -42,7 +44,7 @@ const GroupChatCard = ({chat} : {chat : Chat}) => {
       leftSection={
         <>
           {unReadCounts > 0 && <UnReadBadge unReadCounts={unReadCounts}/>}
-          <GroupChatAvatar members={chat.members} type="chat"/>
+          {avatarUrl ? <UserAvatar type="chat" name={name} avatarUrl={avatarUrl}/> : <GroupChatAvatar members={chat.members} type="chat"/>}
         </>
       }
       subtitle={<p>
