@@ -4,6 +4,7 @@ import MessageItem from "@/components/chat/MessageItem";
 
 const ChatWindowBody = () => {
   const {activeChatId, chats, messages: allMessages} = useChatStore();
+  console.log(allMessages);
 
   // get messages of active chat and active chat info
   const messages = allMessages[activeChatId!]?.items ?? [];
@@ -12,6 +13,7 @@ const ChatWindowBody = () => {
   if (!selectedChat) {
     return <ChatWelcomeScreen/>
   }
+
   // if no messages
   if (!messages.length) {
     return <div className="flex h-full items-center justify-center text-muted-foreground">

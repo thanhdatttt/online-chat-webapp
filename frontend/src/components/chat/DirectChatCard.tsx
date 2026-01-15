@@ -54,7 +54,7 @@ const DirectChatCard = ({chat} : {chat: Chat}) => {
         </>
       }
       subtitle={<p className={cn("text-sm truncate", unReadCounts > 0 ? "font-bold text-foreground" : "text-muted-foreground")}>
-        {lastMessage}
+        {chat.lastMessage?.senderId._id === user._id ? "You": chat.lastMessage?.senderId.displayName}: {lastMessage}
       </p>}
       onSelect={handleSelectChat}
     />

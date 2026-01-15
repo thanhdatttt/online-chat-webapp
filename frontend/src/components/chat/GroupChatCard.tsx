@@ -11,7 +11,7 @@ const GroupChatCard = ({chat} : {chat : Chat}) => {
   // get user info
   const {user} = useAuthStore();
   // get active chat
-  const {activeChatId, setActiveChat, messages} = useChatStore();
+  const {activeChatId, setActiveChat, fetchMessages, messages} = useChatStore();
   if (!user) {
     return null;
   }
@@ -28,6 +28,7 @@ const GroupChatCard = ({chat} : {chat : Chat}) => {
       setActiveChat(id);
       if (!messages[id]) {
         // fetch messages
+        await fetchMessages(id);
       }
     } catch (err) {
       console.log(err);
@@ -47,11 +48,11 @@ const GroupChatCard = ({chat} : {chat : Chat}) => {
           {avatarUrl ? <UserAvatar type="chat" name={name} avatarUrl={avatarUrl}/> : <GroupChatAvatar members={chat.members} type="chat"/>}
         </>
       }
-      subtitle={<p>
+      subtitle={<>
         {lastMessage && (<p className={cn("text-sm truncate", unReadCounts > 0 ? "font-medium text-foreground" : "text-muted-foreground")}>
-          {chat.lastMessage?.senderId.displayName}: {lastMessage}
+          {chat.lastMessage?.senderId._id === user._id ? "You" : chat.lastMessage?.senderId.displayName}: {lastMessage}
         </p>)}
-      </p>}
+      </>}
       onSelect={handleSelectChat}
     />
   );

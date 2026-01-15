@@ -1,5 +1,5 @@
 import type { User } from "./user.ts";
-import type { Chat, Message } from "./chat.ts";
+import type { Chat, Message, SendDirectMessagePayload, SendGroupMessagePayload } from "./chat.ts";
 
 // define type for auth store
 export interface AuthState {
@@ -46,4 +46,6 @@ export interface ChatState {
   setActiveChat: (chatId: string | null) => void;
   fetchChats: () => Promise<void>;
   fetchMessages: (chatId?: string) => Promise<void>;
+  sendDirectMessage: (payload: SendDirectMessagePayload) => Promise<void>;
+  sendGroupMessage: (payload: SendGroupMessagePayload) => Promise<void>;
 }

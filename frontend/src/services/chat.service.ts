@@ -1,11 +1,12 @@
 import api from "@/lib/axios";
-import type { ChatResponse, Message } from "@/types/chat";
+import type { ChatResponse, Message, SendDirectMessagePayload, SendGroupMessagePayload } from "@/types/chat";
 
 // define type for fetching messages
 interface FetchMessagesProps {
   messages: Message[];
   nextCursor?: string;
 }
+
 // limit number of messages per page
 const pageLimit = 50;
 
@@ -24,6 +25,26 @@ export const chatService = {
   fetchMessage: async (id: string, cursor: string): Promise<FetchMessagesProps> => {
     try {
       const res = await api.get(`/chats/${id}/messages?limit=${pageLimit}&cursor=${cursor}`);
+      return res.data;
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+  },
+
+  sendDirectMessage: async (payload: SendDirectMessagePayload) => {
+    try {
+      const res = await api.post("/messages/direct", payload);
+      return res.data;
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+  },
+
+  sendGroupMessage: async (payload: SendGroupMessagePayload) => {
+    try {
+      const res = await api.post("/messages/group", payload);
       return res.data;
     } catch (err) {
       console.log(err);

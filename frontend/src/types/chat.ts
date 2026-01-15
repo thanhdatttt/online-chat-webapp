@@ -75,3 +75,21 @@ export interface Message {
   updatedAt?: string | null;
   createdAt: string;
 }
+
+// define send message payload
+export interface SendDirectMessagePayload {
+  recipientId: string;
+  chatId?: string | null;
+  content?: string;
+  type?: "text" | "image" | "file" | "video" | "audio";
+  attachments?: File[];
+  replyTo?: string;
+}
+
+export interface SendGroupMessagePayload {
+  chatId?: string | null;
+  content?: string;
+  type?: "text" | "image" | "file" | "video" | "audio";
+  attachments?: File[];
+  replyTo?: string;
+}

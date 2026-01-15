@@ -1,8 +1,9 @@
-import { chatService } from "@/services/chat.service";
 import type { ChatState } from "@/types/store";
+import { chatService } from "@/services/chat.service";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { useAuthStore } from "@/stores/auth.store";
+import { toast } from "sonner";
 
 export const useChatStore = create<ChatState>()(
   // store and manage chat in local storage
@@ -90,6 +91,35 @@ export const useChatStore = create<ChatState>()(
           throw err;
         } finally {
           set({messageLoading: false});
+        }
+      },
+
+      sendDirectMessage: async ({recipientId, chatId, type, content, attachments, replyTo}) => {
+        try {
+          await chatService.sendDirectMessage({recipientId, chatId, type, content, attachments, replyTo});
+          // update chat
+          set((state) => ({
+            chats: state.chats.map((chat) => chat._id === chatId ? {...chat} : chat)
+          }));
+
+        } catch (err) {
+          console.log(err);
+          toast.error("Error when sending message. Please try again!");
+          throw err;
+        }
+      },
+
+      sendGroupMessage: async ({chatId, type, content, attachments, replyTo}) => {
+        try {
+          await chatService.sendGroupMessage({ chatId, type, content, attachments, replyTo});
+          // update chat
+          set((state) => ({
+            chats: state.chats.map((chat) => chat._id === chatId ? {...chat} : chat)
+          }));
+        } catch (err) {
+          console.log(err);
+          toast.error("Error when sending message. Please try again!");
+          throw err;
         }
       }
     }),
