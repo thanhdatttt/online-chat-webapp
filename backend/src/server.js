@@ -1,6 +1,7 @@
 import { config } from "./configs/config.js";
 import { connectDB } from "./configs/db.js";
 import { authProtect } from "./middlewares/auth.middleware.js";
+import { initSocket } from "./sockets/index.js";
 import express from "express";
 import cors from "cors";
 import http from "http";
@@ -18,6 +19,9 @@ const server = http.createServer(app);
 app.use(cors({origin: config.CLIENT_URL, credentials: true}));
 app.use(express.json());
 app.use(cookieParser());
+
+// init socket
+initSocket(server);
 
 // routes
 // public routes

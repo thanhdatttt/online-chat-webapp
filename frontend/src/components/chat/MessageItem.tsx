@@ -37,9 +37,11 @@ const MessageItem = ({message, index, messages, selectedChat, lastMessageStatus}
       <div className={cn("flex gap-2 message-bounce mt-1", message.isOwn ? "justify-end" : "justify-start")}>
         {/* avatar */}
         {/* render avatar when not own that message and when break*/}
-        {isBreak && (
+        {!message.isOwn && (
           <div className="w-8">
-            <UserAvatar type="chat" name={sender?.displayName ?? "Echo"} avatarUrl={sender?.avatarUrl ?? undefined}/>
+            {isBreak && (
+              <UserAvatar type="chat" name={sender?.displayName ?? "Echo"} avatarUrl={sender?.avatarUrl ?? undefined}/>
+            )}
           </div>
         )}
 

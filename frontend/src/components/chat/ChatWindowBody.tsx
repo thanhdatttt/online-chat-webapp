@@ -4,7 +4,6 @@ import MessageItem from "@/components/chat/MessageItem";
 
 const ChatWindowBody = () => {
   const {activeChatId, chats, messages: allMessages} = useChatStore();
-  console.log(allMessages);
 
   // get messages of active chat and active chat info
   const messages = allMessages[activeChatId!]?.items ?? [];

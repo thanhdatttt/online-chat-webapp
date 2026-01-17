@@ -1,5 +1,6 @@
 import { response } from "../utils/response.util.js";
 import { updateChatAfterCreateMessage } from "../utils/message.util.js";
+import { emitNewMessage } from "../utils/socket.util.js";
 import Message from "../models/Message.js";
 import Chat from "../models/Chat.js";
 
@@ -37,6 +38,18 @@ export const sendDirectMessage = async (req, res) => {
         // update chat
         updateChatAfterCreateMessage(chat, message, senderId);
         await chat.save();
+
+        // emit message in socket
+        const populatedChat = await Chat.findById(chat._id)
+        .populate({
+            path: "lastMessage",
+            select: "senderId content attachments createdAt",
+            populate: {
+                path: "senderId",
+                select: "displayName avatarUrl",
+            }
+        });
+        emitNewMessage(populatedChat, message);
         return response.success(res, {message}, "Send direct message successfully", 201);
     } catch (err) {
         console.log("Error when send direct message: ", err.message);
@@ -64,6 +77,18 @@ export const sendGroupMessage = async (req, res) => {
         // update chat
         updateChatAfterCreateMessage(chat, message, senderId);
         await chat.save();
+
+        // emit message in socket
+        const populatedChat = await Chat.findById(chat._id)
+        .populate({
+            path: "lastMessage",
+            select: "senderId content attachments createdAt",
+            populate: {
+                path: "senderId",
+                select: "displayName avatarUrl",
+            }
+        });
+        emitNewMessage(populatedChat, message);
         return response.success(res, {message}, "Send group message successfully", 201);
     } catch (err) {
         console.log("Error when send group message: ", err.message);

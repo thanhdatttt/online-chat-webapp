@@ -150,3 +150,17 @@ export const getMessages = async (req, res) => {
         return response.error(res, "System error", err.message, 500);
     }
 }
+
+// get chat for socket io
+export const getChatForSocket = async (userId) => {
+    try {
+        const chats = await Chat.find({
+            "members.userId" : userId,
+        }, {_id: 1});
+
+        return chats.map((chat) => chat._id.toString());
+    } catch (err) {
+        console.log("Error when getting chats for socket: ", err.message);
+        return [];
+    }
+}

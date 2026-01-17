@@ -1,5 +1,6 @@
 import type { User } from "./user.ts";
 import type { Chat, Message, SendDirectMessagePayload, SendGroupMessagePayload } from "./chat.ts";
+import type { Socket } from "socket.io-client";
 
 // define type for auth store
 export interface AuthState {
@@ -48,4 +49,17 @@ export interface ChatState {
   fetchMessages: (chatId?: string) => Promise<void>;
   sendDirectMessage: (payload: SendDirectMessagePayload) => Promise<void>;
   sendGroupMessage: (payload: SendGroupMessagePayload) => Promise<void>;
+
+  // socket handle functions
+  addMessage: (message: Message) => Promise<void>;
+  updateChat: (chat: Chat) => void;
+}
+
+// define store for socket
+export interface SocketState {
+  socket: Socket | null;
+  onlineUsers: string[];
+
+  connectSocket: () => void;
+  disconnectSocket: () => void;
 }

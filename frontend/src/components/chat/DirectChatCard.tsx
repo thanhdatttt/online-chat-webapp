@@ -2,16 +2,16 @@ import { cn } from "@/lib/utils";
 import type { Chat } from "@/types/chat";
 import { useAuthStore } from "@/stores/auth.store";
 import { useChatStore } from "@/stores/chat.store";
+import { useSocketStore } from "@/stores/socket.store";
 import ChatCard from "@/components/chat/ChatCard";
-import UserAvatar from "./UserAvatar";
-import StatusBadge from "./StatusBadge";
-import UnReadBadge from "./UnReadBadge";
+import UserAvatar from "@/components/chat/UserAvatar";
+import StatusBadge from "@/components/chat/StatusBadge";
+import UnReadBadge from "@/components/chat/UnReadBadge";
 
 const DirectChatCard = ({chat} : {chat: Chat}) => {
-  // get user info
   const {user} = useAuthStore();
-  // get active chat
   const {activeChatId, messages, setActiveChat, fetchMessages} = useChatStore();
+  const {onlineUsers} = useSocketStore();
   if (!user) {
     return null;
   }
@@ -49,12 +49,12 @@ const DirectChatCard = ({chat} : {chat: Chat}) => {
       leftSection={
         <>
           <UserAvatar type="sidebar" name={otherUser.displayName ?? ""} avatarUrl={otherUser.avatarUrl ?? undefined}/>
-          <StatusBadge status="offline"/>
+          <StatusBadge status={onlineUsers.includes(otherUser?._id ?? "") ? "online" : "offline"}/>
           {unReadCounts > 0 && <UnReadBadge unReadCounts={unReadCounts}/>}
         </>
       }
       subtitle={<p className={cn("text-sm truncate", unReadCounts > 0 ? "font-bold text-foreground" : "text-muted-foreground")}>
-        {chat.lastMessage?.senderId._id === user._id ? "You": chat.lastMessage?.senderId.displayName}: {lastMessage}
+        {chat.lastMessage?.senderId._id === user._id ? "You" : chat.lastMessage?.senderId.displayName}: {lastMessage}
       </p>}
       onSelect={handleSelectChat}
     />

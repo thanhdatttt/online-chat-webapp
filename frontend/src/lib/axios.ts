@@ -1,10 +1,11 @@
 import { useAuthStore } from "@/stores/auth.store";
 import axios from "axios";
+import { config } from "@/lib/config";
 
 // set up for calling apis
 const api = axios.create({
   // get the url with correct mode
-  baseURL: import.meta.env.MODE === "development" ? "http://localhost:5000/api" : "/api",
+  baseURL: config.env === "development" ? config.apiUrl : "/api",
   withCredentials: true,
 });
 

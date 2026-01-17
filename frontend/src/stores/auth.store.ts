@@ -128,7 +128,7 @@ export const useAuthStore = create<AuthState>()(
         localStorage.clear();
         useChatStore.getState().reset();
 
-        window.location.href =`${config.apiUrl}/api/auth/google`;
+        window.location.href =`${config.apiUrl}/auth/google`;
       },
 
       loginWithFacebook: async () => {
@@ -136,7 +136,7 @@ export const useAuthStore = create<AuthState>()(
         localStorage.clear();
         useChatStore.getState().reset();
 
-        window.location.href =`${config.apiUrl}/api/auth/facebook`;
+        window.location.href =`${config.apiUrl}/auth/facebook`;
       },
 
       loginWithGithub: async () => {
@@ -144,7 +144,7 @@ export const useAuthStore = create<AuthState>()(
         localStorage.clear();
         useChatStore.getState().reset();
 
-        window.location.href =`${config.apiUrl}/api/auth/github`;
+        window.location.href =`${config.apiUrl}/auth/github`;
       },
 
       handleOauthSuccess: async (accessToken) => {
