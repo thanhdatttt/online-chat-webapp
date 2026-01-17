@@ -88,6 +88,7 @@ export const useChatStore = create<ChatState>()(
           });
         } catch (err) {
           console.log(err);
+          toast.error("Error when get messages. Please try again!");
           throw err;
         } finally {
           set({messageLoading: false});
@@ -123,6 +124,40 @@ export const useChatStore = create<ChatState>()(
         }
       },
 
+      markSeen: async () => {
+        try {
+          const {user} = useAuthStore.getState();
+          const {activeChatId, chats} = get();
+          if (!user || !activeChatId) {
+            return;
+          }
+
+          const chat = chats.find((c) => c._id === activeChatId);
+          if (!chat) {
+            return;
+          }
+
+          if ((chat.unReadCounts?.[user._id] ?? 0) === 0) {
+            return;
+          }
+          await chatService.markSeen(activeChatId);
+          // update chat
+          set((state) => ({
+            chats: state.chats.map((c) => (c._id === activeChatId && c.lastMessage ? {
+              ...c,
+              unReadCounts: {
+                ...c.unReadCounts,
+                [user._id]: 0,
+              }
+            } : c))
+          }));
+        } catch (err) {
+          console.log(err);
+          throw err;
+        }
+      },
+
+      // socket handle functions
       addMessage: async (message) => {
         try {
           const {user} = useAuthStore.getState();
@@ -163,9 +198,11 @@ export const useChatStore = create<ChatState>()(
         }
       },
 
-      updateChat: (chat) => {
+      updateChat: (chat: any) => {
         set((state) => ({
-          chats: state.chats.map((c) => c._id === chat._id ? { ...c, ...chat } : c),
+          chats: state.chats.map((c) =>
+            c._id === chat._id ? { ...c, ...chat } : c
+          ),
         }));
       }
     }),

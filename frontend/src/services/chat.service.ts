@@ -8,7 +8,7 @@ interface FetchMessagesProps {
 }
 
 // limit number of messages per page
-const pageLimit = 50;
+const pageLimit = 20;
 
 // chat service functions
 export const chatService = {
@@ -45,6 +45,16 @@ export const chatService = {
   sendGroupMessage: async (payload: SendGroupMessagePayload) => {
     try {
       const res = await api.post("/messages/group", payload);
+      return res.data;
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
+  },
+
+  markSeen: async (chatId: string) => {
+    try {
+      const res = await api.patch(`/chats/${chatId}/seen`);
       return res.data;
     } catch (err) {
       console.log(err);

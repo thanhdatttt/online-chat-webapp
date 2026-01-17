@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useChatStore } from "@/stores/chat.store";
 import { SidebarInset } from "@/components/ui/sidebar";
 import ChatWelcomeScreen from "@/components/chat/ChatWelcomeScreen";
@@ -8,9 +9,27 @@ import MessageInput from "@/components/chat/MessageInput";
 
 const ChatWindowLayout = () => {
   // get chats info from store
-  const {activeChatId, chats, messages, messageLoading: loading} = useChatStore();
+  const {activeChatId, chats, messages, messageLoading: loading, markSeen} = useChatStore();
   // get the selected chat info (active chat)
   const selectedChat = chats.find((c) => c._id === activeChatId) ?? null;
+
+  // mark seen
+  useEffect(() => {
+    if (!selectedChat) {
+      return;
+    }
+
+    const markAsSeen = async () => {
+      try {
+        await markSeen();
+      } catch (err) {
+        console.log(err);
+        throw err;
+      }
+    }
+
+    markAsSeen();
+  }, [markSeen, selectedChat]);
 
   // when does not have active chat, display welcome screen
   if (!selectedChat) {

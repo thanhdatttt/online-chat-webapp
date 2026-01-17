@@ -20,8 +20,9 @@ export const useAuthStore = create<AuthState>()(
       // clear store function and other stores
       clearState: () => {
         set({accessToken: null, user: null, loading: false});
-        localStorage.clear();
         useChatStore.getState().reset();
+        localStorage.clear();
+        sessionStorage.clear();
       },
 
       // auth functions
@@ -45,8 +46,7 @@ export const useAuthStore = create<AuthState>()(
           set({loading: true});
 
           // clear local storage and stores
-          localStorage.clear();
-          useChatStore.getState().reset();
+          get().clearState();
 
           const res = await authService.signIn(usernameOrEmail, password);
           get().setAccesstoken(res.accessToken);
@@ -125,24 +125,21 @@ export const useAuthStore = create<AuthState>()(
 
       loginWithGoogle: async () => {
         // clear local storage and stores
-        localStorage.clear();
-        useChatStore.getState().reset();
+        get().clearState();
 
         window.location.href =`${config.apiUrl}/auth/google`;
       },
 
       loginWithFacebook: async () => {
         // clear local storage and stores
-        localStorage.clear();
-        useChatStore.getState().reset();
-
+        get().clearState();
+        
         window.location.href =`${config.apiUrl}/auth/facebook`;
       },
 
       loginWithGithub: async () => {
         // clear local storage and stores
-        localStorage.clear();
-        useChatStore.getState().reset();
+        get().clearState();
 
         window.location.href =`${config.apiUrl}/auth/github`;
       },

@@ -12,5 +12,24 @@ export const emitNewMessage = (chat, message) => {
             lastMessageAt: chat.lastMessageAt,
         },
         unReadCounts: chat.unReadCounts,
-    })
+    });
+}
+
+export const emitReadMessage = (chat) => {
+    const io = getIO();
+
+    io.to(chat._id.toString()).emit("read-message", {
+        chat,
+        lastMessage: {
+            _id: chat.lastMessage._id,
+            content: chat.lastMessage.content,
+            attachments: chat.lastMessage.attachments,
+            createdAt: chat.lastMessage.createdAt,
+            senderId: {
+                _id: chat.lastMessage.senderId._id,
+                displayName: chat.lastMessage.senderId.displayName,
+                avatarUrl: chat.lastMessage.senderId.avatarUrl,
+            }
+        }
+    }); 
 }

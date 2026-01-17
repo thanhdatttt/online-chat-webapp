@@ -15,7 +15,7 @@ interface MessageItemProps {
 
 const MessageItem = ({message, index, messages, selectedChat, lastMessageStatus} : MessageItemProps) => {
   // previous message from index
-  const prev = index + 1 < messages.length ? messages[index + 1] : undefined;;
+  const prev = index + 1 < messages.length ? messages[index + 1] : undefined;
 
   // check if the message need to break (if not break -> does not need to render avatar and time)
   // when to break (first message, previous sender different from current sender)

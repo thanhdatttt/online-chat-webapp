@@ -49,10 +49,11 @@ export interface ChatState {
   fetchMessages: (chatId?: string) => Promise<void>;
   sendDirectMessage: (payload: SendDirectMessagePayload) => Promise<void>;
   sendGroupMessage: (payload: SendGroupMessagePayload) => Promise<void>;
+  markSeen: () => Promise<void>;
 
   // socket handle functions
   addMessage: (message: Message) => Promise<void>;
-  updateChat: (chat: Chat) => void;
+  updateChat: (chat: unknown) => void;
 }
 
 // define store for socket
