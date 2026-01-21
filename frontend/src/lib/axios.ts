@@ -5,7 +5,7 @@ import { config } from "@/lib/config";
 // set up for calling apis
 const api = axios.create({
   // get the url with correct mode
-  baseURL: config.env === "development" ? config.apiUrl : "/api",
+  baseURL: config.apiUrl,
   withCredentials: true,
 });
 
