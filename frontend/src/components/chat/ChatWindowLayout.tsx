@@ -9,7 +9,7 @@ import MessageInput from "@/components/chat/MessageInput";
 
 const ChatWindowLayout = () => {
   // get chats info from store
-  const {activeChatId, chats, messages, messageLoading: loading, markSeen} = useChatStore();
+  const {activeChatId, chats, messageLoading: loading, markSeen} = useChatStore();
   // get the selected chat info (active chat)
   const selectedChat = chats.find((c) => c._id === activeChatId) ?? null;
 
