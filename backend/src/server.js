@@ -1,5 +1,6 @@
 import { config } from "./configs/config.js";
 import { connectDB } from "./configs/db.js";
+import { cloudinaryConfig } from "./configs/cloudinary.js";
 import { authProtect } from "./middlewares/auth.middleware.js";
 import { initSocket } from "./sockets/index.js";
 import express from "express";
@@ -19,6 +20,9 @@ const server = http.createServer(app);
 app.use(cors({origin: config.CLIENT_URL, credentials: true}));
 app.use(express.json());
 app.use(cookieParser());
+
+// config cloudinary
+cloudinaryConfig();
 
 // init socket
 initSocket(server);

@@ -18,4 +18,8 @@ export const config = {
     GIT_CLIENT_ID: process.env.GIT_CLIENT_ID,
     GIT_CLIENT_SECRET: process.env.GIT_CLIENT_SECRET,
     GIT_CLIENT_CALLBACK: process.env.GIT_CLIENT_CALLBACK,
+    // cloudinary
+    CLOUDINARY_NAME: process.env.CLOUDINARY_NAME,
+    CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
+    CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
 }

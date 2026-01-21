@@ -10,6 +10,7 @@ export interface AuthState {
   loading: boolean | null,
 
   setAccesstoken: (accessToken: string) => void;
+  setUser: (user: User) => void;
   clearState: () => void;
 
   signUp: (username: string, email: string, firstName: string, lastName: string, password: string) => Promise<void>,
@@ -74,6 +75,11 @@ export interface FriendState {
   acceptRequest: (requestId: string) => Promise<void>;
   declineRequest: (requestId: string) => Promise<void>;
   cancelRequest: (requestId: string) => Promise<void>;
+}
+
+// define store for user
+export interface UserState {
+  updateAvatarUrl: (formData: FormData) => Promise<void>;
 }
 
 // define store for socket

@@ -1,7 +1,6 @@
 import { response } from "../utils/response.util.js";
+import { uploadImageFromBuffer } from "../middlewares/upload.middleware.js";
 import User from "../models/User.js";
-import Friend from "../models/Friend.js";
-import FriendRequest from "../models/FriendRequest.js";
 
 export const getMe = async (req, res) => {
     try {
@@ -27,5 +26,35 @@ export const searchUsers = async (req, res) => {
     } catch (err) {
         console.log("Error when search user: ", err.message);
         return response.error(res, "System Error", err.message, 500);
+    }
+}
+
+export const uploadAvatar = async (req, res) => {
+    try {
+        const file = req.file;
+        const userId = req.user._id;
+        if (!file) {
+        return response.error(res, "Bad request", "No file uploaded", 400);
+        }
+
+        const result = await uploadImageFromBuffer(file.buffer);
+        const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        {
+            avatarUrl: result.secure_url,
+        },
+        {
+            new: true,
+        }
+        ).select("avatarUrl");
+
+        if (!updatedUser.avatarUrl) {
+            return response.error(res, "Bad request", "Avatar is null", 400);
+        }
+
+        return response.success(res, {avatarUrl: updatedUser.avatarUrl}, "Upload avatar successfully", 200);
+    } catch (err) {
+        console.log("Error wen uploading avatar: ", err.message);
+        return response.error(res, "System error", err.message, 500);
     }
 }

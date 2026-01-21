@@ -28,6 +28,7 @@ import type { User } from "@/types/user"
 import { useState } from "react"
 import Logout from "@/components/auth/Logout"
 import FriendRequestDialog from "@/components/request/FriendRequestDialog"
+import ProfileDialog from "@/components/profile/ProfileDialog"
 
 export function NavUser({
   user,
@@ -86,7 +87,7 @@ export function NavUser({
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
                 {/* account */}
-                <DropdownMenuItem className="cursor-pointer">
+                <DropdownMenuItem onClick={() => setProfileOpen(true)} className="cursor-pointer">
                   <UserIcon className="text-muted-foreground dark:group-focus:text-accent-foreground!"/>
                   Account
                 </DropdownMenuItem>
@@ -106,7 +107,9 @@ export function NavUser({
         </SidebarMenuItem>
       </SidebarMenu>
 
+      {/* side dialog */}
       <FriendRequestDialog open={friendRequestOpen} setOpen={setFriendRequestOpen}/>
+      <ProfileDialog open={profileOpen} setOpen={setProfileOpen}/>
     </>
   )
 }
