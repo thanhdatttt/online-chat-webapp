@@ -4,6 +4,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { useAuthStore } from "@/stores/auth.store";
 import { toast } from "sonner";
+import { useSocketStore } from "@/stores/socket.store";
 
 export const useChatStore = create<ChatState>()(
   // store and manage chat in local storage
@@ -14,6 +15,7 @@ export const useChatStore = create<ChatState>()(
       activeChatId: null,
       loading: false, // for chats
       messageLoading: false, // for messages
+      createLoading: false, // for create chat
 
       setActiveChat: (chatId) => {
         set({activeChatId: chatId});
@@ -157,6 +159,32 @@ export const useChatStore = create<ChatState>()(
         }
       },
 
+      addChat: (chat) => {
+        set((state) => {
+          const exists = state.chats.some((c) => c._id.toString() === chat._id.toString());
+          return {
+            chats: exists ? state.chats : [chat, ...state.chats],
+            activeChatId: chat._id,
+          };
+        });
+      },
+
+      createChat: async (type, name, memberIds) => {
+        try {
+          set({ createLoading: true });
+          const res = await chatService.createChat(type, name, memberIds);
+
+          get().addChat(res.chat);
+          useSocketStore.getState().socket?.emit("join-chat", res.chat._id);
+        } catch (err) {
+          console.log(err);
+          toast.error("Error when creating chat. Please try again");
+          throw err;
+        } finally {
+          set({ createLoading: false });
+        }
+      },
+
       // socket handle functions
       addMessage: async (message) => {
         try {
@@ -204,7 +232,7 @@ export const useChatStore = create<ChatState>()(
             c._id === chat._id ? { ...c, ...chat } : c
           ),
         }));
-      }
+      },
     }),
     {
       name: "chat-storage",

@@ -73,6 +73,7 @@ userSchema.index(
   },
   { unique: true }
 );
+userSchema.index({ displayName: 1 });
 
 // hash password before saving to database
 userSchema.pre("save", async function() {

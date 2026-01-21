@@ -1,4 +1,5 @@
 import { response } from "../utils/response.util.js";
+import { getIO } from "../sockets/chat.instance.js";
 import Chat from "../models/Chat.js";
 import Message from "../models/Message.js";
 
@@ -52,7 +53,24 @@ export const createChat = async (req, res) => {
             {path: "members.userId", select: "displayName avatarUrl"},
             {path: "lastMessage.senderId", select: "displayName avatarUrl"},
         ]);
-        return response.success(res, {chat}, "Create chat successfully", 201);
+        const members = (chat.members || []).map((member) => ({
+            _id: member.userId?._id,
+            displayName: member.userId?.displayName,
+            avatarUrl: member.userId?.avatarUrl,
+            role: member.role,
+            joinedAt: member.joinedAt,
+        }));
+        const formatted = {...chat.toObject(), members};
+
+        // emit socket new group for each member
+        if (type === "group") {
+            const io = getIO();
+            memberIds.forEach((userId) => {
+                io.to(userId).emit("new-group", formatted);
+            })
+        }
+        
+        return response.success(res, {chat: formatted}, "Create chat successfully", 201);
     } catch (err) {
         console.log("Error when create chat: ", err.message);
         return response.error(res, "System error", err.message, 500);

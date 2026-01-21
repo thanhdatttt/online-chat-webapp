@@ -1,7 +1,8 @@
-import { MessageCirclePlus, UsersRound, UserRoundPlus } from "lucide-react";
+import { UserPlusIcon, UsersRound } from "lucide-react";
 import { SidebarMenu, SidebarMenuItem } from "@/components/ui/sidebar";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import AddFriendModal from "@/components/chat/AddFriendModal";
 
 const ToolBar = () => {
   return (
@@ -11,28 +12,29 @@ const ToolBar = () => {
         <Input type="text" placeholder="Search" className="h-8 text-xs" />
       </SidebarMenuItem>
 
-      <div className="grid grid-cols-3 gap-2">
-        {/* new message button */}
-        <Button
-          variant="outline"
-          size="sm"
-          className="flex-1 gap-2 bg-transparent dark:hover:bg-primary cursor-pointer"
-          onClick={() => console.log("New message clicked")}
-        >
-          <MessageCirclePlus className="size-4" />
-          <span>+Message</span>
-        </Button>
-
+      <div className="grid grid-cols-2 gap-2">
         {/* new friend button */}
-        <Button
-          variant="outline"
-          size="sm"
-          className="flex-1 gap-2 bg-transparent dark:hover:bg-primary cursor-pointer"
-          onClick={() => console.log("New message clicked")}
-        >
-          <UserRoundPlus className="size-4" />
-          <span>+Friend</span>
-        </Button>
+         <div className="relative">
+          {/* visual button */}
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex-1 gap-2 w-full pointer-events-none"
+          >
+            <UserPlusIcon/>
+            <span>+Friend</span>
+          </Button>
+
+          {/* FULL CLICK TRIGGER */}
+          <div className="
+            absolute inset-0 z-10
+            **:w-full **:h-full
+            **:flex **:items-center **:justify-center
+            opacity-0
+          ">
+            <AddFriendModal />
+          </div>
+        </div>
 
         {/* new group message */}
         <Button

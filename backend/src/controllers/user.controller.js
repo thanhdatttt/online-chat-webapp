@@ -1,4 +1,7 @@
 import { response } from "../utils/response.util.js";
+import User from "../models/User.js";
+import Friend from "../models/Friend.js";
+import FriendRequest from "../models/FriendRequest.js";
 
 export const getMe = async (req, res) => {
     try {
@@ -9,11 +12,20 @@ export const getMe = async (req, res) => {
     }
 }
 
-export const test = async (req, res) => {
+export const searchUsers = async (req, res) => {
     try {
-        return response.success(res, {}, "", 204);
+        const {q} = req.query;
+        if (!q || q.trim() === "") {
+            return response.error(res, "Bad request", "Missing username", 400);
+        }
+
+        const user = await User.findOne({ username: q }).select(
+        "_id displayName username avatarUrl"
+        );
+
+        return response.success(res, {user}, "Search successfully", 200);
     } catch (err) {
-        console.log("Error", err.message);
+        console.log("Error when search user: ", err.message);
         return response.error(res, "System Error", err.message, 500);
     }
 }

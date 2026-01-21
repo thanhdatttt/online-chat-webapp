@@ -60,5 +60,15 @@ export const chatService = {
       console.log(err);
       throw err;
     }
+  },
+
+  createChat: async (type: "direct" | "group", name: string, memberIds: string[]) => {
+    try {
+      const res = await api.post("/chats", {type, name, memberIds});
+      return res.data;
+    } catch (err) {
+      console.log(err);
+      throw err;
+    }
   }
 }

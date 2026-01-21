@@ -1,3 +1,4 @@
+import type { Friend, FriendRequest } from "./friend.ts";
 import type { User } from "./user.ts";
 import type { Chat, Message, SendDirectMessagePayload, SendGroupMessagePayload } from "./chat.ts";
 import type { Socket } from "socket.io-client";
@@ -42,6 +43,7 @@ export interface ChatState {
   activeChatId: string | null;
   loading: boolean; // for chats
   messageLoading: boolean; // for messages
+  createLoading: boolean;
   
   reset: () => void;
   setActiveChat: (chatId: string | null) => void;
@@ -50,10 +52,28 @@ export interface ChatState {
   sendDirectMessage: (payload: SendDirectMessagePayload) => Promise<void>;
   sendGroupMessage: (payload: SendGroupMessagePayload) => Promise<void>;
   markSeen: () => Promise<void>;
+  addChat: (chat: Chat) => void;
+  createChat: (type: "direct" | "group", name: string, memberIds: string[]) => Promise<void>;
 
   // socket handle functions
   addMessage: (message: Message) => Promise<void>;
   updateChat: (chat: unknown) => void;
+}
+
+// define store for friends
+export interface FriendState {
+  loading: boolean;
+  friends: Friend[],
+  receivedList: FriendRequest[];
+  sentList: FriendRequest[];
+
+  searchUsers: (q: string) => Promise<User | null>;
+  sendFriendRequest: (to: string, message?: string) => Promise<string>;
+  getAllFriendRequests: () => Promise<void>;
+  getFriends: () => Promise<void>;
+  acceptRequest: (requestId: string) => Promise<void>;
+  declineRequest: (requestId: string) => Promise<void>;
+  cancelRequest: (requestId: string) => Promise<void>;
 }
 
 // define store for socket

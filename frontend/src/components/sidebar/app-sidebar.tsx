@@ -12,6 +12,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { useThemeStore } from "@/stores/theme.store";
+import { useAuthStore } from "@/stores/auth.store";
 import { Moon, Sun } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import ToolBar from "@/components/chat/ToolBar";
@@ -19,8 +21,7 @@ import NewGroupModal from "@/components/chat/NewGroupModal";
 import AddFriendModal from "@/components/chat/AddFriendModal";
 import GroupChatList from "@/components/chat/GroupChatList";
 import DirectChatList from "@/components/chat/DirectChatList";
-import { useThemeStore } from "@/stores/theme.store";
-import { useAuthStore } from "@/stores/auth.store";
+import CreateNewChat from "@/components/chat/CreateNewChat";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   // get theme functions
@@ -58,6 +59,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         {/* tool bar */}
         <SidebarGroup>
           <ToolBar/>
+        </SidebarGroup>
+        <SidebarGroup>
+          <CreateNewChat/>
         </SidebarGroup>
 
         {/* direct message */}

@@ -7,4 +7,11 @@ export default async (io, socket, user) => {
     chatIds.forEach((id) => {
         socket.join(id);
     });
+
+    // join chat
+    socket.on("join-chat", (chatId) => {
+        socket.join(chatId);
+    });
+
+    socket.join(user._id.toString());
 }
